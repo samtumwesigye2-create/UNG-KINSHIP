@@ -31,3 +31,23 @@ def test_ui_contract():
     for label in ['Family Tree','People','Families','Encoder','Ancestry/DNA','Records','Timeline','Search','Administration']:
         assert label in page
     assert 'viewport' in page
+
+
+def test_interactive_workspace_contract():
+    page=client.get('/').text
+    for marker in [
+        'id="familySelect"', 'id="personSelect"', 'id="treeCanvas"',
+        'id="familyName"', 'id="personName"', 'id="relationshipType"',
+        'id="encodeButton"', 'function createFamily', 'function addPerson',
+        'function addRelationship', 'function runEncoder', 'function loadTree',
+        "fetch('/v1/families'"
+    ]:
+        assert marker in page
+
+
+def test_family_listing_endpoint_for_workspace():
+    client.post('/v1/families',json={'name':'Alpha'})
+    client.post('/v1/families',json={'name':'Beta'})
+    r=client.get('/v1/families')
+    assert r.status_code == 200
+    assert [x['name'] for x in r.json()] == ['Alpha','Beta']
