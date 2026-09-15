@@ -5,6 +5,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: .
+      DATABASE_URL: sqlite:///./kinship-test.db
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
